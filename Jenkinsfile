@@ -2,7 +2,8 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'NodeJS'
+        nodejs 'NodeJS' // Assuming NodeJS 14.x is installed on the Jenkins agent
+        // You might need to adjust the NodeJS version based on your setup
     }
 
     stages {
@@ -15,6 +16,7 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 script {
+                    echo 'Building frontend...'
                     sh 'npm install --verbose'
                     sh 'npm run build'
                 }
@@ -24,6 +26,7 @@ pipeline {
         stage('Build Backend') {
             steps {
                 script {
+                    echo 'Building backend...'
                     // Ensure Composer is in the PATH
                     env.PATH = "/usr/local/bin:$PATH"
                     sh 'composer install'
@@ -34,6 +37,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
+                    echo 'Deploying...'
                     def remoteDirectory = "/var/www/html"
 
                     // Clean the remote directory before deploying
@@ -64,6 +68,7 @@ pipeline {
         stage('Start Vue Frontend') {
             steps {
                 script {
+                    echo 'Starting Vue frontend...'
                     sh 'npm run dev'
                 }
             }
@@ -72,6 +77,7 @@ pipeline {
         stage('Start Laravel Server') {
             steps {
                 script {
+                    echo 'Starting Laravel server...'
                     def remoteDirectory = "/var/www/html"
 
                     // Start the Laravel server on the remote server
