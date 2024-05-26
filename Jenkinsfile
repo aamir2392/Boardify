@@ -1,10 +1,14 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs 'NodeJS' // Assuming NodeJS 14.x is installed on the Jenkins agent
+        // You might need to adjust the NodeJS version based on your setup
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the code from the Git repository
                 checkout scm
             }
         }
@@ -12,7 +16,7 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 script {
-                    // Install npm dependencies and run npm build on the local machine
+                    echo 'Building frontend...'
                     sh 'npm install --verbose'
                     sh 'npm run build'
                 }
@@ -22,8 +26,10 @@ pipeline {
         stage('Build Backend') {
             steps {
                 script {
-                    // Install composer dependencies on the local machine
-                    sh 'composer install'
+                    echo 'Building backend...'
+                    // Ensure Composer is in the PATH
+                    env.PATH = "/usr/local/bin:$PATH"
+                    sh 'composer update --lock' // Change 'composer install' to 'composer update'
                 }
             }
         }
@@ -31,6 +37,7 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
+                    echo 'Deploying...'
                     def remoteDirectory = "/var/www/html"
 
                     // Clean the remote directory before deploying
@@ -61,6 +68,7 @@ pipeline {
         stage('Start Vue Frontend') {
             steps {
                 script {
+                    echo 'Starting Vue frontend...'
                     sh 'npm run dev'
                 }
             }
@@ -69,6 +77,7 @@ pipeline {
         stage('Start Laravel Server') {
             steps {
                 script {
+                    echo 'Starting Laravel server...'
                     def remoteDirectory = "/var/www/html"
 
                     // Start the Laravel server on the remote server
