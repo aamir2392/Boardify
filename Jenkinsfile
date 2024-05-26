@@ -16,7 +16,7 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 script {
-                    echo 'Building frontend...'
+                    echo 'Building frontend....'
                     sh 'npm install --verbose'
                     sh 'npm run build'
                 }
