@@ -1,10 +1,13 @@
 pipeline {
     agent any
 
+    tools {
+        nodejs 'NodeJS' // Replace with the name you gave to your NodeJS installation
+    }
+
     stages {
         stage('Checkout') {
             steps {
-                // Checkout the code from the Git repository.............!!!!!!!!!!!!
                 checkout scm
             }
         }
@@ -12,7 +15,6 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 script {
-                    // Install npm dependencies and run npm build on the local machine
                     sh 'npm install --verbose'
                     sh 'npm run build'
                 }
@@ -22,7 +24,6 @@ pipeline {
         stage('Build Backend') {
             steps {
                 script {
-                    // Install composer dependencies on the local machine
                     sh 'composer install'
                 }
             }
