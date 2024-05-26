@@ -29,7 +29,7 @@ pipeline {
                     echo 'Building backend...'
                     // Ensure Composer is in the PATH
                     env.PATH = "/usr/local/bin:$PATH"
-                    sh 'composer self-update' // Change 'composer install' to 'composer update'
+                    sh 'composer install' // Change 'composer install' to 'composer update'
                 }
             }
         }
