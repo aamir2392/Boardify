@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        nodejs 'NodeJS' // Replace with the name you gave to your NodeJS installation
+        nodejs 'NodeJS' // Replace with the name of your NodeJS installation
     }
 
     stages {
@@ -24,6 +24,8 @@ pipeline {
         stage('Build Backend') {
             steps {
                 script {
+                    // Ensure Composer is in the PATH
+                    env.PATH = "/usr/local/bin:$PATH"
                     sh 'composer install'
                 }
             }
