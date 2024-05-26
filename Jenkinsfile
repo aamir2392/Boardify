@@ -1,14 +1,10 @@
 pipeline {
     agent any
 
-    tools {
-        nodejs 'NodeJS' // Assuming NodeJS 14.x is installed on the Jenkins agent
-        // You might need to adjust the NodeJS version based on your setup
-    }
-
     stages {
         stage('Checkout') {
             steps {
+                // Checkout the code from the Git repository.....
                 checkout scm
             }
         }
@@ -16,7 +12,7 @@ pipeline {
         stage('Build Frontend') {
             steps {
                 script {
-                    echo 'Building frontend...'
+                    // Install npm dependencies and run npm build on the local machine
                     sh 'npm install --verbose'
                     sh 'npm run build'
                 }
@@ -26,10 +22,8 @@ pipeline {
         stage('Build Backend') {
             steps {
                 script {
-                    echo 'Building backend...'
-                    // Ensure Composer is in the PATH
-                    env.PATH = "/usr/local/bin:$PATH"
-                    sh 'composer install' // Change 'composer install' to 'composer update'
+                    // Install composer dependencies on the local machine...
+                    sh 'composer install'
                 }
             }
         }
@@ -37,12 +31,18 @@ pipeline {
         stage('Deploy') {
             steps {
                 script {
-                    echo 'Deploying...'
                     def remoteDirectory = "/var/www/html"
+
+                    // Print a message indicating that deployment is starting
+                    echo "Deploying to remote directory: ${remoteDirectory}"
 
                     // Clean the remote directory before deploying
                     sh "ssh -o StrictHostKeyChecking=no ubuntu@16.170.210.115 'rm -rf ${remoteDirectory}/*'"
 
+                    // Print a message indicating that cleaning is complete
+                    echo "Remote directory cleaned"
+
+                    // Deploy files using sshPublisher
                     sshPublisher(
                         publishers: [
                             sshPublisherDesc(
@@ -61,14 +61,17 @@ pipeline {
                             )
                         ]
                     )
+
+                    // Print a message indicating that deployment is complete
+                    echo "Deployment completed"
                 }
             }
         }
 
+
         stage('Start Vue Frontend') {
             steps {
                 script {
-                    echo 'Starting Vue frontend...'
                     sh 'npm run dev'
                 }
             }
@@ -77,7 +80,6 @@ pipeline {
         stage('Start Laravel Server') {
             steps {
                 script {
-                    echo 'Starting Laravel server...'
                     def remoteDirectory = "/var/www/html"
 
                     // Start the Laravel server on the remote server
